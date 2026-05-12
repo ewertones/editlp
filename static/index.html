@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>editlp — OpenLP song editor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>editlp</h1>
+  <div class="actions">
+    <label for="filePicker" class="file-btn" title="Open .xml file">Choose file</label>
+    <input id="filePicker" type="file" accept=".xml,application/xml,text/xml" hidden>
+    <button id="loadSample" type="button">Load sample</button>
+    <button id="prettify" type="button">Prettify</button>
+    <button id="minify" type="button">Minify</button>
+    <button id="autonumber" type="button" title="Auto-number labels per type, top-down">Autonumber</button>
+    <button id="undo" type="button" title="Undo (Ctrl+Z)">Undo</button>
+    <button id="redo" type="button" title="Redo (Ctrl+Y / Ctrl+Shift+Z)">Redo</button>
+    <button id="clear" type="button">Clear</button>
+    <button id="download" type="button" class="primary" title="Download (Ctrl+S)">Download .xml</button>
+    <span id="status" class="status"></span>
+  </div>
+  <div class="header-right">
+    <a href="https://www.buymeacoffee.com/ewertones" target="_blank" rel="noopener" class="bmc-link" title="Buy me a coffee">
+      <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ewertones&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=FFFFFF" alt="Buy me a coffee">
+    </a>
+    <a href="#" class="gh-link" target="_blank" rel="noopener" title="Source on GitHub" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+<main>
+  <section class="pane" id="xmlPane">
+    <h2>OpenLP song XML</h2>
+    <div id="dropOverlay" class="drop-overlay" hidden><div>Drop .xml file here</div></div>
+    <textarea id="xml" spellcheck="false" placeholder="Paste OpenLP song XML here, or drop a .xml file..."></textarea>
+  </section>
+
+  <section class="pane">
+    <div class="tabs">
+      <button type="button" class="tab active" data-tab="edit">Edit</button>
+      <button type="button" class="tab" data-tab="preview">Preview</button>
+    </div>
+
+    <div id="tab-edit" class="tab-body">
+      <fieldset>
+        <legend>Song</legend>
+        <div class="row">
+          <label>version
+            <div class="semver">
+              <div class="semver-part">
+                <input id="p-vmajor" type="number" min="0" value="1" inputmode="numeric">
+                <button type="button" class="bump bump-up"   data-bump="major" data-dir="up"   title="Bump major">▲</button>
+                <button type="button" class="bump bump-down" data-bump="major" data-dir="down" title="Decrement major">▼</button>
+              </div>
+              <span class="semver-dot">.</span>
+              <div class="semver-part">
+                <input id="p-vminor" type="number" min="0" value="0" inputmode="numeric">
+                <button type="button" class="bump bump-up"   data-bump="minor" data-dir="up"   title="Bump minor">▲</button>
+                <button type="button" class="bump bump-down" data-bump="minor" data-dir="down" title="Decrement minor">▼</button>
+              </div>
+              <span class="semver-dot">.</span>
+              <div class="semver-part">
+                <input id="p-vpatch" type="number" min="0" value="0" inputmode="numeric">
+                <button type="button" class="bump bump-up"   data-bump="patch" data-dir="up"   title="Bump patch">▲</button>
+                <button type="button" class="bump bump-down" data-bump="patch" data-dir="down" title="Decrement patch">▼</button>
+              </div>
+            </div>
+          </label>
+          <label>filename (download)<input id="p-filename" type="text"></label>
+        </div>
+        <label>verse order<input id="p-order" type="text" placeholder="v1 c1 v2 c1 b1"></label>
+      </fieldset>
+
+      <div id="validation" class="validation" hidden></div>
+
+      <fieldset>
+        <legend>
+          Verses
+          <button id="addVerse" type="button" class="mini" title="Add verse (Ctrl+Enter)">+ add verse</button>
+        </legend>
+        <div id="verses"></div>
+      </fieldset>
+    </div>
+
+    <div id="tab-preview" class="tab-body" hidden>
+      <div id="preview" class="preview"></div>
+    </div>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
