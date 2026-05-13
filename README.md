@@ -7,6 +7,8 @@
 
 > A zero-dependency, browser-based editor, parser, and viewer for [OpenLP](https://openlp.org/) song XML.
 
+![editlp screenshot — two-pane editor with XML on the left and structured form on the right](docs/screenshot.webp)
+
 editlp opens, edits, validates, and previews the XML blob that OpenLP stores in the `songs.lyrics` column — the canonical format below. Everything happens client-side; the Go binary is just a static file server.
 
 ```xml
