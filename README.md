@@ -1,15 +1,15 @@
 # editlp
 
-[![CI](https://github.com/ewertones/editlp/actions/workflows/ci.yml/badge.svg)](https://github.com/ewertones/editlp/actions/workflows/ci.yml)
+[![Deploy](https://github.com/ewertones/editlp/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/ewertones/editlp/actions/workflows/deploy-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Go Reference](https://pkg.go.dev/badge/github.com/ewertones/editlp.svg)](https://pkg.go.dev/github.com/ewertones/editlp)
 [![Made with vanilla JS](https://img.shields.io/badge/vanilla-JS-yellow)](static/app.js)
+[![Live demo](https://img.shields.io/badge/demo-online-2da44e)](https://ewertones.github.io/editlp/)
 
 > A zero-dependency, browser-based editor, parser, and viewer for [OpenLP](https://openlp.org/) song XML.
 
 ![editlp screenshot — two-pane editor with XML on the left and structured form on the right](docs/screenshot.webp)
 
-editlp opens, edits, validates, and previews the XML blob that OpenLP stores in the `songs.lyrics` column — the canonical format below. Everything happens client-side; the Go binary is just a static file server.
+editlp opens, edits, validates, and previews the XML blob that OpenLP stores in the `songs.lyrics` column — the canonical format below. Everything runs client-side, so the live demo is just static files on GitHub Pages.
 
 ```xml
 <?xml version='1.0' encoding='UTF-8'?>
@@ -29,41 +29,36 @@ Verse `type` codes: `v` verse, `c` chorus, `p` pre-chorus, `b` bridge, `i` intro
 
 ## Table of contents
 
-- [Quickstart](#quickstart)
+- [Try it](#try-it)
 - [Features](#features)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [How it works](#how-it-works)
 - [Project layout](#project-layout)
-- [Development](#development)
+- [Running it locally](#running-it-locally)
 - [Notes & limitations](#notes--limitations)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Quickstart
+## Try it
 
-You need [Go 1.21+](https://go.dev/dl/) installed. No npm, no build step for the frontend.
+### Hosted
+
+**<https://ewertones.github.io/editlp/>** — nothing to install.
+
+### Locally / offline
+
+There's no build step and no runtime to install. Clone the repo and open the file in your browser, or serve `static/` with any one-liner static server.
 
 ```sh
 git clone https://github.com/ewertones/editlp.git
 cd editlp
-go run .
+# pick whichever you have handy:
+python -m http.server 8080 -d static     # Python
+npx serve static                         # Node
+# ...or just open static/index.html directly in your browser
 ```
 
-Then open <http://localhost:8080>.
-
-### Flags
-
-| Flag           | Default   | Description                          |
-| -------------- | --------- | ------------------------------------ |
-| `-addr`        | `:8080`   | Listen address.                      |
-| `-dir`         | `static`  | Static directory served at `/`.      |
-
-### Or build a single binary
-
-```sh
-go build -o editlp .
-./editlp
-```
+Then visit <http://localhost:8080>. Air-gapped worship laptops welcome.
 
 ## Features
 
@@ -94,8 +89,7 @@ go build -o editlp .
 
 ## How it works
 
-- The Go binary is a static file server with cache-busting headers. It does nothing with the XML.
-- Parsing, editing, serialization, validation, undo/redo, and the preview render all run in the browser via the JavaScript in [`static/app.js`](static/app.js).
+- The entire editor lives in [`static/app.js`](static/app.js): DOMParser-based XML parsing, manual serialization with CDATA-safe escaping, validation, undo/redo, drag-and-drop, and the preview render.
 - **Left pane** — raw XML textarea.
 - **Right pane** — structured form with an inline live preview tab.
 - Both sides are editable; a change on either side re-syncs the other.
@@ -104,30 +98,31 @@ go build -o editlp .
 
 ```
 .
-├── main.go                 # static file server (no business logic)
-├── go.mod
 ├── static/
 │   ├── index.html          # two-pane UI
 │   ├── app.js              # parser, serializer, sync, preview, undo/redo, drag, etc.
 │   └── style.css
-├── .github/workflows/      # CI
+├── docs/
+│   └── screenshot.webp
+├── .github/workflows/      # GitHub Pages deploy
 ├── LICENSE
 ├── README.md
 └── CONTRIBUTING.md
 ```
 
-## Development
+## Running it locally
 
-```sh
-go run .            # start the dev server on :8080
-go build ./...      # build the binary
-go vet ./...        # static checks
-gofmt -l .          # find unformatted Go files
-```
+You don't need anything installed. Three equally good options:
 
-CI runs `go vet`, `go build`, and a `gofmt` check on every push and PR — see [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+| Method                            | Command                                           |
+| --------------------------------- | ------------------------------------------------- |
+| Open the file directly            | Double-click `static/index.html`                  |
+| Python (any 3.x)                  | `python -m http.server 8080 -d static`            |
+| Node                              | `npx serve static`                                |
 
-The frontend has no build step. Edit anything under [`static/`](static/) and hard-refresh the browser (`Ctrl+F5`) — the Go server sends `Cache-Control: no-store`, so the only cache to bust is the browser's.
+Opening `index.html` over `file://` works for most features. If something feels off (rare), use a real HTTP server — that's what GitHub Pages uses too.
+
+There's no build step. Edit anything under [`static/`](static/) and hard-refresh (`Ctrl+F5`).
 
 ## Notes & limitations
 

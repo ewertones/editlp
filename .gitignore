@@ -1,20 +1,3 @@
-# Compiled binaries
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Go test artifacts
-*.test
-*.out
-coverage.txt
-
-# Go workspace / vendor
-go.work
-go.work.sum
-vendor/
-
 # Editor / IDE
 .vscode/
 .idea/
@@ -31,3 +14,8 @@ desktop.ini
 *.log
 .env
 .env.local
+
+# In case someone resurrects a backend
+*.exe
+*.exe~
+node_modules/

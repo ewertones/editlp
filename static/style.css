@@ -263,7 +263,7 @@ input:focus, textarea:focus, select:focus {
 .semver-part {
   position: relative;
   flex: 1;
-  min-width: 80px;
+  min-width: 64px;
 }
 .semver-part input {
   margin: 0;

@@ -10,41 +10,33 @@ Thanks for your interest in improving **editlp**. The project is small and self-
 
 ## Development setup
 
-You need [Go 1.21+](https://go.dev/dl/) installed; that's it. There's no npm, no build step for the frontend, no database.
+editlp is plain HTML / CSS / JavaScript — no build step, no toolchain. Clone the repo and serve `static/`:
 
 ```sh
 git clone https://github.com/ewertones/editlp.git
 cd editlp
-go run .
+# any of these will do:
+python -m http.server 8080 -d static
+npx serve static
+# ...or just open static/index.html directly in your browser
 ```
 
-Open <http://localhost:8080>. The Go process is a static file server only — all of the editor logic lives in [`static/app.js`](static/app.js). Edit the files under `static/` and refresh the page.
+Edit anything under [`static/`](static/) and hard-refresh the browser (`Ctrl+F5`).
 
-### Useful flags
+### Live site
 
-- `-addr :9000` change the listen address (default `:8080`)
-- `-dir some/path` serve a different static directory (default `static`)
-
-### Smoke test
-
-```sh
-go build ./...
-go vet ./...
-```
-
-CI runs these on every push and PR via [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+`main` is auto-deployed to <https://ewertones.github.io/editlp/> by [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml). PR merges go live within a minute.
 
 ## Project layout
 
 ```
 .
-├── main.go                 # static file server (no business logic)
-├── go.mod
 ├── static/
 │   ├── index.html          # two-pane UI
-│   ├── app.js              # parser, serializer, sync, preview, undo/redo
+│   ├── app.js              # parser, serializer, sync, preview, undo/redo, drag, etc.
 │   └── style.css
-├── .github/workflows/      # CI
+├── docs/screenshot.webp
+├── .github/workflows/      # GitHub Pages deploy
 ├── LICENSE
 ├── README.md
 └── CONTRIBUTING.md
@@ -52,9 +44,9 @@ CI runs these on every push and PR via [`.github/workflows/ci.yml`](.github/work
 
 ## Style
 
-- **JavaScript** — vanilla, no framework, no build step. Match the surrounding style (no semicolons-vs-semicolons debates, just look at neighbouring lines). Avoid pulling in dependencies unless there's a strong reason.
+- **JavaScript** — vanilla, no framework, no build step. Match the surrounding style. Avoid pulling in dependencies unless there's a strong reason.
 - **CSS** — CSS variables are defined at `:root`; reuse them rather than hardcoding colours. Verse-type palettes live as `--t-{type}-{bg,border,ink}`.
-- **Go** — only the file server lives here, so just `gofmt` and `go vet`.
+- **HTML** — semantic-ish; keep the markup short.
 
 ## Commit messages
 
