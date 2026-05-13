@@ -343,6 +343,20 @@ function renderForm(verses) {
   orderEl.value = verseOrder || '';
   versesEl.innerHTML = '';
   verses.forEach((v, i) => versesEl.appendChild(verseNode(v, i)));
+  autoSizeAll();
+}
+
+// Grow a verse textarea to fit its content — the `rows` attribute provides the
+// minimum baseline, scrollHeight provides the actual content height.
+function autoSize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
+}
+
+function autoSizeAll() {
+  for (const ta of versesEl.querySelectorAll('textarea[data-k="text"]')) {
+    autoSize(ta);
+  }
 }
 
 function verseNode(v, i) {
@@ -374,7 +388,7 @@ function verseNode(v, i) {
       <button type="button" class="mini danger" data-act="del" title="Remove">remove</button>
     </div>
     <div class="verse-toolbar">${fmtBtns}</div>
-    <textarea data-k="text" rows="5" placeholder="Lyric lines, one per row.">${esc(v.text)}</textarea>
+    <textarea data-k="text" rows="8" placeholder="Lyric lines, one per row.">${esc(v.text)}</textarea>
   `;
   return div;
 }
@@ -681,6 +695,7 @@ xmlEl.addEventListener('input', () => {
 
 document.getElementById('tab-edit').addEventListener('input', (e) => {
   if (!e.target.matches('input, select, textarea')) return;
+  if (e.target.matches('textarea[data-k="text"]')) autoSize(e.target);
   syncFromForm();
   scheduleSnapshot();
 });
@@ -794,6 +809,9 @@ for (const tab of document.querySelectorAll('.tab')) {
     const name = tab.dataset.tab;
     document.getElementById('tab-edit').hidden    = name !== 'edit';
     document.getElementById('tab-preview').hidden = name !== 'preview';
+    // scrollHeight is 0 for `display: none` ancestors, so any auto-grow that
+    // happened while we were on the preview tab needs to be redone now.
+    if (name === 'edit') autoSizeAll();
   });
 }
 

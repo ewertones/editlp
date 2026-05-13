@@ -6,9 +6,9 @@
   --fg-muted: #57606a;
   --border: #d0d7de;
   --border-soft: #e1e5ea;
-  --header-bg: #24292f;
+  --header-bg: #004587;
   --header-fg: #ffffff;
-  --header-border: #1b1f24;
+  --header-border: #003366;
   --accent: #0969da;
   --accent-soft: #ddf4ff;
   --primary: #2da44e;
@@ -88,16 +88,27 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 header .file-btn {
   display: inline-block;
   margin: 0;
-  background: var(--muted-btn);
   color: #fff;
-  border: 1px solid rgba(0,0,0,0.2);
   border-radius: 6px;
   padding: 5px 10px;
   font-size: 12px;
   line-height: normal;
   cursor: pointer;
 }
-header .file-btn:hover { background: var(--muted-btn-hover); }
+
+/* Header-scoped button styling — translucent white on the brand-blue navbar so
+   the muted buttons feel native; primary/active keep their distinctive colors. */
+header button,
+header .file-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+header button:hover,
+header .file-btn:hover { background: rgba(255, 255, 255, 0.22); }
+header button.primary { background: var(--primary); border-color: rgba(0,0,0,0.2); }
+header button.primary:hover { background: var(--primary-hover); }
+header button.active { background: var(--accent); border-color: var(--accent); }
+header button.active:hover { background: var(--accent); filter: brightness(1.1); }
 
 /* Right-side header links: Buy Me a Coffee (BMC script injects its own button
    inside .bmc-slot) + GitHub */
@@ -377,10 +388,11 @@ input:focus, textarea:focus, select:focus {
 .verse-header .spacer { flex: 1; }
 .verse textarea {
   width: 100%;
-  min-height: 80px;
   font-size: 12.5px;
   line-height: 1.5;
   background: var(--bg-elev);
+  resize: none;
+  overflow-y: hidden;
 }
 
 /* Verse formatting toolbar (OpenLP tags) */
